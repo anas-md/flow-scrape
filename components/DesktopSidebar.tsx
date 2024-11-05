@@ -1,38 +1,11 @@
 "use client";
-import {
-  CoinsIcon,
-  HomeIcon,
-  Layers2Icon,
-  ShieldCheckIcon,
-} from "lucide-react";
+
 import React from "react";
 import Logo from "./Logo";
 import Link from "next/link";
 import { buttonVariants } from "./ui/button";
 import { usePathname } from "next/navigation";
-
-const routes = [
-  {
-    href: "",
-    label: "Home",
-    icon: HomeIcon,
-  },
-  {
-    href: "workkflows",
-    label: "Workflows",
-    icon: Layers2Icon,
-  },
-  {
-    href: "credentials",
-    label: "Credentials",
-    icon: ShieldCheckIcon,
-  },
-  {
-    href: "billing",
-    label: "Billing",
-    icon: CoinsIcon,
-  },
-];
+import { routes } from "@/lib/data";
 
 function DesktopSidebar() {
   const pathname = usePathname();
@@ -47,6 +20,7 @@ function DesktopSidebar() {
       <div className="flex items-center justify-center gap-2 border-b-[1px] border-separate p-4">
         <Logo />
       </div>
+      <div className="p-2">TODO- CREDITS</div>
       <div className="flex flex-col p-2">
         {routes.map((route) => (
           <Link
