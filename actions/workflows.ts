@@ -7,13 +7,14 @@ import {
   createWorkflowShemaType,
 } from "@/schema/workflows";
 import { auth } from "@clerk/nextjs/server";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 export async function getWorkflowsForUser() {
   const { userId } = await auth();
 
   if (!userId) {
-    throw new Error("unatuthenticated");
+    throw new Error("Unauthenticated");
   }
   return prisma.workflow.findMany({
     where: { userId },
@@ -31,7 +32,7 @@ export async function createWorkflow(form: createWorkflowShemaType) {
   const { userId } = await auth();
 
   if (!userId) {
-    throw new Error("unatuthenticated");
+    throw new Error("Unauthenticated");
   }
 
   const result = await prisma.workflow.create({
@@ -47,4 +48,21 @@ export async function createWorkflow(form: createWorkflowShemaType) {
   }
 
   redirect(`/workflow/editor/${result.id}`);
+}
+
+export async function deleteWorkflow(workflowId: string) {
+  const { userId } = await auth();
+
+  if (!userId) {
+    throw new Error("Unauthenticated");
+  }
+
+  await prisma.workflow.delete({
+    where: {
+      userId,
+      id: workflowId,
+    },
+  });
+
+  revalidatePath("/workflows");
 }
