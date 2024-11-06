@@ -12,7 +12,7 @@ export const routes = [
     icon: HomeIcon,
   },
   {
-    href: "workkflows",
+    href: "workflows",
     label: "Workflows",
     icon: Layers2Icon,
   },
