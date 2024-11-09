@@ -7,9 +7,11 @@ export enum WorkflowStatus {
 
 export enum TaskType {
   LAUNCH_BROWSER = "LAUNCH_BROWSER",
+  PAGE_TO_HTML = "PAGE_TO_HTML",
 }
 export enum TaskParamType {
   STRING = "STRING",
+  BROWSE_INSTANCE = "BROWSE_INSTANCE",
 }
 
 export interface AppNodeData {
