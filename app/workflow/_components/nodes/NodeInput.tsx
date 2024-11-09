@@ -24,6 +24,7 @@ function NodeInput({ input, nodeId }: { input: TaskParam; nodeId: string }) {
             "!bg-muted-foreground !border-2 !border-background !-left-2 !w-4 !h-4",
             ColorForHandle[input.type]
           )}
+          isConnectable={!isConnected}
         />
       )}
     </div>
