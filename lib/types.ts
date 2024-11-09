@@ -35,6 +35,6 @@ export interface TaskParam {
 
 export interface ParamProps {
   param: TaskParam;
-  value: string;
-  updateNodeParamValue: (newValue: string) => void;
+  value?: string;
+  updateNodeParamValue?: (newValue: string) => void;
 }
