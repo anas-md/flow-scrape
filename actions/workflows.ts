@@ -46,7 +46,7 @@ export async function createWorkflow(form: createWorkflowShemaType) {
     data: {
       userId,
       status: WorkflowStatus.DRAFT,
-      definition: "TODO",
+      definition: JSON.stringify(initWorkflow),
       ...data,
     },
   });
