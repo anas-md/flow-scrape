@@ -1,4 +1,6 @@
 import { Node } from "@xyflow/react";
+import { LucideProps } from "lucide-react";
+import React from "react";
 
 export enum WorkflowStatus {
   DRAFT = "DRAFT",
@@ -40,3 +42,13 @@ export interface ParamProps {
   updateNodeParamValue: (newValue: string) => void;
   disabled?: boolean;
 }
+
+export type WorkflowTask = {
+  label: string;
+  icon: React.FC<LucideProps>;
+  type: TaskType;
+  isEntryPoint?: boolean;
+  inputs: TaskParam[];
+  outputs: TaskParam[];
+  credits: number;
+};

@@ -31,7 +31,7 @@ function NodeHeader({
   return (
     <div className="flex items-center gap-2 p-2">
       <task.icon size={16} />
-      <div className="flex items-center justify-between w-full">
+      <div className="flex items-center justify-between w-full gap-1">
         <p className="text-xs font-bold uppercase text-muted-foreground">
           {task.label}
         </p>
@@ -39,7 +39,7 @@ function NodeHeader({
           {task.isEntryPoint && <Badge className="py-1">Entry Point</Badge>}
           <Badge className="flex gap-2 items-center text-xs py-1">
             <Coins size={16} />
-            TODO
+            {task.credits}
           </Badge>
           {!task.isEntryPoint && (
             <Fragment>
