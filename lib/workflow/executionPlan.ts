@@ -1,6 +1,8 @@
 import { Edge, getIncomers } from "@xyflow/react";
 import {
   AppNode,
+  AppNodeMissingInputs,
+  FlowToExecutionPlanValidationError,
   WorkflowExecutionPlan,
   WorkflowExecutionPlanPhase,
 } from "../types";
@@ -8,6 +10,10 @@ import { TaskRegistry } from "./task/Registry";
 
 type flowToExecutionPlan = {
   executionPlan?: WorkflowExecutionPlan;
+  error?: {
+    type: FlowToExecutionPlanValidationError;
+    invalidElements?: AppNodeMissingInputs[];
+  };
 };
 
 export function flowToExecutionPlan(
@@ -19,9 +25,12 @@ export function flowToExecutionPlan(
   );
 
   if (!entryPoint) {
-    throw new Error("TODO: No Entry point");
+    return {
+      error: { type: FlowToExecutionPlanValidationError.NO_ENTRY },
+    };
   }
 
+  const inputsWithErrors: AppNodeMissingInputs[] = [];
   const planned = new Set<string>();
 
   const executionPlan: WorkflowExecutionPlan = [
@@ -34,8 +43,10 @@ export function flowToExecutionPlan(
   planned.add(entryPoint.id);
   const enpInvalidInput = getInvalidInputs(entryPoint, edges, planned);
   if (enpInvalidInput.length > 0) {
-    console.log("Invalid Inputs", entryPoint.id, enpInvalidInput);
-    throw new Error("TODO: Invalid Inputs");
+    inputsWithErrors.push({
+      nodeId: entryPoint.id,
+      inputs: enpInvalidInput,
+    });
   }
   for (
     let phase = 2;
@@ -59,7 +70,10 @@ export function flowToExecutionPlan(
         if (incomers.every((incomer) => planned.has(incomer.id))) {
           // If this hits it means all the incoming nodes are planned and thus the the current-node has invalid inputs
           console.log("Invalid Inputs", currentNode.id, invalidInputs);
-          throw new Error("TODO: Invalid Inputs");
+          inputsWithErrors.push({
+            nodeId: currentNode.id,
+            inputs: invalidInputs,
+          });
         } else {
           // Since all the incomers are not planned, skipping the check
           continue;
@@ -73,6 +87,14 @@ export function flowToExecutionPlan(
       planned.add(node.id);
     }
     executionPlan.push(nextPhase);
+  }
+  if (inputsWithErrors.length > 0) {
+    return {
+      error: {
+        type: FlowToExecutionPlanValidationError.INVALID_INPUTS,
+        invalidElements: inputsWithErrors,
+      },
+    };
   }
 
   return { executionPlan };

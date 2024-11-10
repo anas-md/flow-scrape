@@ -17,6 +17,11 @@ export enum TaskParamType {
   BROWSE_INSTANCE = "BROWSE_INSTANCE",
 }
 
+export enum FlowToExecutionPlanValidationError {
+  "NO_ENTRY",
+  "INVALID_INPUTS",
+}
+
 export interface AppNodeData {
   [key: string]: any;
   type: TaskType;
@@ -58,3 +63,8 @@ export type WorkflowExecutionPlanPhase = {
   nodes: AppNode[];
 };
 export type WorkflowExecutionPlan = WorkflowExecutionPlanPhase[];
+
+export type AppNodeMissingInputs = {
+  nodeId: string;
+  inputs: string[];
+};
