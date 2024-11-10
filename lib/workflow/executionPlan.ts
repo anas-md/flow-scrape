@@ -32,7 +32,11 @@ export function flowToExecutionPlan(
   ];
 
   planned.add(entryPoint.id);
-
+  const enpInvalidInput = getInvalidInputs(entryPoint, edges, planned);
+  if (enpInvalidInput.length > 0) {
+    console.log("Invalid Inputs", entryPoint.id, enpInvalidInput);
+    throw new Error("TODO: Invalid Inputs");
+  }
   for (
     let phase = 2;
     phase <= nodes.length && planned.size < nodes.length;
