@@ -10,7 +10,7 @@ import {
 import { flowToExecutionPlan } from "@/lib/workflow/executionPlan";
 import { TaskRegistry } from "@/lib/workflow/task/Registry";
 import { auth } from "@clerk/nextjs/server";
-import { number } from "zod";
+import { redirect } from "next/navigation";
 
 export async function runWorkflow(form: {
   workflowId: string;
@@ -83,4 +83,6 @@ export async function runWorkflow(form: {
   if (!execution) {
     throw new Error("Workflow execution not created");
   }
+
+  redirect(`/workflow/runs/${workflowId}/${execution.id}`);
 }

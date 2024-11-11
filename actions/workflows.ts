@@ -113,3 +113,22 @@ export async function updateWorkFlow({
   });
   revalidatePath("/workflows");
 }
+
+export async function getWorkflowExecutionWithPhases(executionId: string) {
+  const { userId } = await auth();
+
+  if (!userId) {
+    throw new Error("Unauthenticated");
+  }
+
+  return prisma.workflowExecution.findUnique({
+    where: { id: executionId, userId },
+    include: {
+      phases: {
+        orderBy: {
+          number: "asc",
+        },
+      },
+    },
+  });
+}
