@@ -21,6 +21,24 @@ export enum FlowToExecutionPlanValidationError {
   "NO_ENTRY",
   "INVALID_INPUTS",
 }
+export enum WorkflowExecutionStatus {
+  PENDING = "PENDING",
+  RUNNING = "RUNNING",
+  COMPLETED = "COMPLETED",
+  FAILED = "FAILED",
+}
+
+export enum ExecutionPhaseStatus {
+  PENDING = "PENDING",
+  RUNNING = "RUNNING",
+  COMPLETED = "COMPLETED",
+  FAILED = "FAILED",
+  CREATED = "CREATED",
+}
+
+export enum WorkflowExecutionTrigger {
+  MANUAl = "MANUAL",
+}
 
 export interface AppNodeData {
   [key: string]: any;
