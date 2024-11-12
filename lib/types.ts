@@ -1,5 +1,6 @@
 import { Node } from "@xyflow/react";
 import { LucideProps } from "lucide-react";
+import { Browser, Page } from "puppeteer";
 import React from "react";
 
 export enum WorkflowStatus {
@@ -85,4 +86,24 @@ export type WorkflowExecutionPlan = WorkflowExecutionPlanPhase[];
 export type AppNodeMissingInputs = {
   nodeId: string;
   inputs: string[];
+};
+
+export type Enviornment = {
+  browser?: Browser;
+  page?: Page;
+  phases: {
+    [key: string]: {
+      inputs: Record<string, string>;
+      outputs: Record<string, string>;
+    };
+  };
+};
+
+export type ExecutionEnviornment<T extends WorkflowTask> = {
+  getInput(name: T["inputs"][number]["name"]): string;
+  setOutput(name: T["outputs"][number]["name"], value: string): void;
+  getBrowser(): Browser | undefined;
+  setBrowser(browser: Browser): void;
+  setPage(page: Page): void;
+  getPage(): Page | undefined;
 };

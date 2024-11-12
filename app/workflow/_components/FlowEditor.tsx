@@ -75,8 +75,6 @@ function FlowEditor({ workflow }: { workflow: Workflow }) {
 
   const onConnect = useCallback(
     (connection: Connection) => {
-      console.log(connection);
-
       setEdges((eds) => addEdge({ ...connection, animated: true }, eds));
       if (!connection.targetHandle) return;
       const node = nodes.find((node) => node.id === connection.target);

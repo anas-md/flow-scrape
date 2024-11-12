@@ -7,6 +7,7 @@ import {
   WorkflowExecutionStatus,
   WorkflowExecutionTrigger,
 } from "@/lib/types";
+import { executeWorkflow } from "@/lib/workflow/executeWorkflow";
 import { flowToExecutionPlan } from "@/lib/workflow/executionPlan";
 import { TaskRegistry } from "@/lib/workflow/task/Registry";
 import { auth } from "@clerk/nextjs/server";
@@ -60,6 +61,7 @@ export async function runWorkflow(form: {
       status: WorkflowExecutionStatus.PENDING,
       startedAt: new Date(),
       trigger: WorkflowExecutionTrigger.MANUAl,
+      definition: flowDefinition,
       phases: {
         create: executionPlan.flatMap((phase) =>
           phase.nodes.flatMap((node) => {
@@ -83,6 +85,9 @@ export async function runWorkflow(form: {
   if (!execution) {
     throw new Error("Workflow execution not created");
   }
+
+  // This will be a long running function, so just calling it and making it run in background
+  executeWorkflow(execution.id);
 
   redirect(`/workflow/runs/${workflowId}/${execution.id}`);
 }
