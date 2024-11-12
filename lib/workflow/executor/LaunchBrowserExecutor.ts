@@ -17,9 +17,8 @@ export async function LaunchBrowserExecutor(
     await page.goto(websiteUrl);
     enviornment.setPage(page);
     return true;
-  } catch (error) {
-    console.log("🔴LAUNCH_BROWSER_EXECUTOR_ERROR🔴");
-    console.log(error);
+  } catch (error: any) {
+    enviornment.log.error(error.message);
     return false;
   }
 }

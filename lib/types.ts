@@ -99,6 +99,19 @@ export type Enviornment = {
   };
 };
 
+export const LogLevels = ["info", "error"] as const;
+export type LogLevel = (typeof LogLevels)[number];
+
+export type Log = { message: string; level: LogLevel; timeStamp: Date };
+
+export type LogFunction = (message: string) => void;
+
+export type LogCollector = {
+  getAll(): Log[];
+} & {
+  [key in LogLevel]: LogFunction;
+};
+
 export type ExecutionEnviornment<T extends WorkflowTask> = {
   getInput(name: T["inputs"][number]["name"]): string;
   setOutput(name: T["outputs"][number]["name"], value: string): void;
@@ -106,4 +119,5 @@ export type ExecutionEnviornment<T extends WorkflowTask> = {
   setBrowser(browser: Browser): void;
   setPage(page: Page): void;
   getPage(): Page | undefined;
+  log: LogCollector;
 };
