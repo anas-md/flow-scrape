@@ -41,6 +41,7 @@ export async function runWorkflow(form: {
   }
 
   let executionPlan: WorkflowExecutionPlan;
+  let workflowDefinition = flowDefinition;
 
   // Is the execution plan is published then the execution plan will set from workflow definition
   if (workflow.status === WorkflowStatus.PUBLISHED) {
@@ -48,6 +49,7 @@ export async function runWorkflow(form: {
       throw new Error("No execution planned found in published workflow");
     }
     executionPlan = JSON.parse(workflow.executionPlan);
+    workflowDefinition = workflow.definition;
   } else {
     // Otherwise generating execution plan from flow-definition passed
     if (!flowDefinition) {
@@ -72,7 +74,7 @@ export async function runWorkflow(form: {
       status: WorkflowExecutionStatus.PENDING,
       startedAt: new Date(),
       trigger: WorkflowExecutionTrigger.MANUAl,
-      definition: flowDefinition,
+      definition: workflowDefinition,
       phases: {
         create: executionPlan.flatMap((phase) =>
           phase.nodes.flatMap((node) => {
