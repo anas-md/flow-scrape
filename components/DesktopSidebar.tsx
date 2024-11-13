@@ -6,6 +6,7 @@ import Link from "next/link";
 import { buttonVariants } from "./ui/button";
 import { usePathname } from "next/navigation";
 import { routes } from "@/lib/data";
+import UserAvailableCreditsBadge from "./UserAvailableCreditsBadge";
 
 function DesktopSidebar() {
   const pathname = usePathname();
@@ -20,12 +21,14 @@ function DesktopSidebar() {
       <div className="flex items-center justify-center gap-2 border-b-[1px] border-separate p-4">
         <Logo />
       </div>
-      <div className="p-2">TODO- CREDITS</div>
+      <div className="p-2">
+        <UserAvailableCreditsBadge />
+      </div>
       <div className="flex flex-col p-2">
         {routes.map((route) => (
           <Link
             key={route.href}
-            href={route.href}
+            href={""}
             className={buttonVariants({
               variant:
                 activeRoute.href === route.href
