@@ -76,5 +76,5 @@ model ExecutionLog{
 
 model UserBalance {
   userId String @id
-  credit Int @default(0)
+  credits Int @default(0)
 }

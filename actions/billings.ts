@@ -18,5 +18,5 @@ export async function getAvailableCredits() {
 
   if (!balance) return -1;
 
-  return balance.credit;
+  return balance.credits;
 }
