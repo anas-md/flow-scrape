@@ -8,6 +8,7 @@ import SaveButton from "./SaveButton";
 import ExecuteButton from "./ExecuteButton";
 import NavigationTabs from "./NavigationTabs";
 import PublishButton from "./PublishButton";
+import UnPublishButton from "./UnPublishButton";
 
 interface Props {
   title: string;
@@ -48,6 +49,7 @@ function Topbar({
         {!hideButtons && (
           <Fragment>
             <ExecuteButton workflowId={workflowId} />
+            {isPublished && <UnPublishButton workflowId={workflowId} />}
             {!isPublished && (
               <Fragment>
                 <SaveButton workflowId={workflowId} />
