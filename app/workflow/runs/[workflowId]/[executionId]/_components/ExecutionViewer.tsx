@@ -43,7 +43,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { ExecutionLog } from "@prisma/client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PhaseStatusBadge from "./PhaseStatusBadge";
 
 type ExecutionData = Awaited<ReturnType<typeof getWorkflowExecutionWithPhases>>;
@@ -65,6 +65,24 @@ function ExecutionViewer({ initialData }: { initialData: ExecutionData }) {
   });
 
   const isRunning = query.data?.status === WorkflowExecutionStatus.RUNNING;
+
+  useEffect(() => {
+    // If status is running auto select the running phase
+    const phases = query.data?.phases || [];
+    if (isRunning) {
+      const phaseToSelect = phases.toSorted((a, b) =>
+        a.startedAt! > b.startedAt! ? -1 : 1
+      )[0];
+
+      setSelectedPhase(phaseToSelect.id);
+      return;
+    }
+    // Auto selecting last run phase on reload
+    const phaseToSelect = phases.toSorted((a, b) =>
+      a.completedAt! > b.completedAt! ? -1 : 1
+    )[0];
+    setSelectedPhase(phaseToSelect?.id || "");
+  }, [query.data?.phases, isRunning]);
 
   const duration = datesToDurationString(
     query.data?.completedAt,
