@@ -35,7 +35,6 @@ function DesktopSidebar() {
           >
             <route.icon size={20} />
             {route.label}
-            {activeRoute.href === route.href}
           </Link>
         ))}
       </div>
