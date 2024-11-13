@@ -19,12 +19,12 @@ function UserAvailableCreditsBadge() {
   return (
     <Link
       href={"/billing"}
-      className={
-        (cn("w-full space-x-2 items-center"),
+      className={cn(
+        "w-full space-x-2 items-center",
         buttonVariants({
           variant: "outline",
-        }))
-      }
+        })
+      )}
     >
       <Coins size={20} className="text-primary" />
       <span className="font-semibold capitalize">
