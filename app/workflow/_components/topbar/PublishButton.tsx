@@ -1,22 +1,23 @@
 "use client";
 import { runWorkflow } from "@/actions/runWorkflow";
+import { publishWorkflow } from "@/actions/workflows";
 import { Button } from "@/components/ui/button";
 import useExecutionPlan from "@/hooks/useExecutionPlan";
 import { useMutation } from "@tanstack/react-query";
 import { useReactFlow } from "@xyflow/react";
-import { PlayIcon } from "lucide-react";
+import { PlayIcon, UploadIcon } from "lucide-react";
 import React from "react";
 import { toast } from "sonner";
 
-function ExecuteButton({ workflowId }: { workflowId: string }) {
+function PublishButton({ workflowId }: { workflowId: string }) {
   const generateExecutionPlan = useExecutionPlan();
   const mutation = useMutation({
-    mutationFn: runWorkflow,
+    mutationFn: publishWorkflow,
     onSuccess: () => {
-      toast.success("Execution Started", { id: "flow-execution" });
+      toast.success("Workflow published", { id: workflowId });
     },
-    onError: () => {
-      toast.error("Something went wrong", { id: "flow-execution" });
+    onError: (error: any) => {
+      toast.error(error.message || "Something went wrong", { id: workflowId });
     },
   });
 
@@ -30,15 +31,16 @@ function ExecuteButton({ workflowId }: { workflowId: string }) {
       onClick={() => {
         const plan = generateExecutionPlan();
         if (!plan) return;
+        toast.loading("Publishing workflow...", { id: workflowId });
         mutation.mutate({
-          workflowId,
+          id: workflowId,
           flowDefinition: JSON.stringify(toObject()),
         });
       }}
     >
-      <PlayIcon size={16} className="stroke-orange-400" /> Execute
+      <UploadIcon size={16} className="stroke-green-400" /> Publish
     </Button>
   );
 }
 
-export default ExecuteButton;
+export default PublishButton;

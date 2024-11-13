@@ -6,6 +6,7 @@ import {
   WorkflowExecutionPlan,
   WorkflowExecutionStatus,
   WorkflowExecutionTrigger,
+  WorkflowStatus,
 } from "@/lib/types";
 import { executeWorkflow } from "@/lib/workflow/executeWorkflow";
 import { flowToExecutionPlan } from "@/lib/workflow/executionPlan";
@@ -34,25 +35,35 @@ export async function runWorkflow(form: {
       id: workflowId,
     },
   });
+
   if (!workflow) {
     throw new Error("Workflow not found");
   }
 
   let executionPlan: WorkflowExecutionPlan;
 
-  if (!flowDefinition) {
-    throw new Error("Flow definition is not defined");
-  }
+  // Is the execution plan is published then the execution plan will set from workflow definition
+  if (workflow.status === WorkflowStatus.PUBLISHED) {
+    if (!workflow.executionPlan) {
+      throw new Error("No execution planned found in published workflow");
+    }
+    executionPlan = JSON.parse(workflow.executionPlan);
+  } else {
+    // Otherwise generating execution plan from flow-definition passed
+    if (!flowDefinition) {
+      throw new Error("Flow definition is not defined");
+    }
 
-  const flow = JSON.parse(flowDefinition);
-  const result = flowToExecutionPlan(flow.nodes, flow.edges);
-  if (result.error) {
-    throw new Error("Flow definition not valid");
+    const flow = JSON.parse(flowDefinition);
+    const result = flowToExecutionPlan(flow.nodes, flow.edges);
+    if (result.error) {
+      throw new Error("Flow definition not valid");
+    }
+    if (!result.executionPlan) {
+      throw new Error("No execution plan generated, Something went wrong");
+    }
+    executionPlan = result.executionPlan;
   }
-  if (!result.executionPlan) {
-    throw new Error("No execution plan generated, Something went wrong");
-  }
-  executionPlan = result.executionPlan;
 
   const execution = await prisma.workflowExecution.create({
     data: {

@@ -28,9 +28,9 @@ function WorkflowCard({ workflow }: { workflow: Workflow }) {
             )}
           >
             {isDraft ? (
-              <FileTextIcon className="h-5 w-5" />
+              <FileTextIcon className="h-5 w-5 stroke-white" />
             ) : (
-              <PlayIcon className="h-5 w-5" />
+              <PlayIcon className="h-5 w-5 stroke-white" />
             )}
           </div>
           <div>

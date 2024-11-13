@@ -1,5 +1,7 @@
 import { ExecutionPhase } from "@prisma/client";
 import { intervalToDuration } from "date-fns";
+import { AppNode } from "./types";
+import { TaskRegistry } from "./workflow/task/Registry";
 
 export function waitFor(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -30,4 +32,10 @@ export function datesToDurationString(
 type Phase = Pick<ExecutionPhase, "creditsConsumed">;
 export function getPhasesTotalCost(phases: Phase[]) {
   return phases.reduce((acc, phase) => acc + (phase.creditsConsumed || 0), 0);
+}
+
+export function calculateWorkflowCost(nodes: AppNode[]) {
+  return nodes.reduce((acc, node) => {
+    return acc + TaskRegistry[node.data.type].credits;
+  }, 0);
 }

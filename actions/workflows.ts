@@ -1,8 +1,10 @@
 "use server";
 
+import { calculateWorkflowCost } from "@/lib/helper";
 import prisma from "@/lib/prisma";
 import { AppNode, TaskType, WorkflowStatus } from "@/lib/types";
 import { createFlowNode } from "@/lib/workflow/CreateFlowNode";
+import { flowToExecutionPlan } from "@/lib/workflow/executionPlan";
 import {
   createWorkflowShema,
   createWorkflowShemaType,
@@ -173,4 +175,60 @@ export async function getWorkflowExecutions(workflowId: string) {
       createdAt: "asc",
     },
   });
+}
+
+export async function publishWorkflow({
+  id,
+  flowDefinition,
+}: {
+  id: string;
+  flowDefinition: string;
+}) {
+  const { userId } = await auth();
+
+  if (!userId) {
+    throw new Error("Unauthenticated");
+  }
+
+  const workflow = await prisma.workflow.findUnique({
+    where: {
+      id,
+      userId,
+    },
+  });
+  if (!workflow) {
+    throw new Error("Workflow not found");
+  }
+
+  if (workflow.status !== WorkflowStatus.DRAFT) {
+    throw new Error("Workflow is not draft");
+  }
+
+  const flow = JSON.parse(flowDefinition);
+
+  const result = flowToExecutionPlan(flow.nodes, flow.edges);
+
+  if (result.error) {
+    throw new Error("Flow definition not valid");
+  }
+
+  if (!result.executionPlan) {
+    throw new Error("Something went wrong, No eexecution plan generated");
+  }
+
+  const creditsCost = calculateWorkflowCost(flow.nodes);
+
+  await prisma.workflow.update({
+    where: {
+      id,
+      userId,
+    },
+    data: {
+      definition: flowDefinition,
+      executionPlan: JSON.stringify(result.executionPlan),
+      creditsCost,
+      status: WorkflowStatus.PUBLISHED,
+    },
+  });
+  revalidatePath(`/worflow/editor/${id}`);
 }

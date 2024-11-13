@@ -7,15 +7,23 @@ import React, { Fragment } from "react";
 import SaveButton from "./SaveButton";
 import ExecuteButton from "./ExecuteButton";
 import NavigationTabs from "./NavigationTabs";
+import PublishButton from "./PublishButton";
 
 interface Props {
   title: string;
   subtitle?: string;
   workflowId: string;
   hideButtons?: boolean;
+  isPublished?: boolean;
 }
 
-function Topbar({ title, subtitle, workflowId, hideButtons = false }: Props) {
+function Topbar({
+  title,
+  subtitle,
+  workflowId,
+  hideButtons = false,
+  isPublished = false,
+}: Props) {
   const router = useRouter();
 
   return (
@@ -40,7 +48,12 @@ function Topbar({ title, subtitle, workflowId, hideButtons = false }: Props) {
         {!hideButtons && (
           <Fragment>
             <ExecuteButton workflowId={workflowId} />
-            <SaveButton workflowId={workflowId} />
+            {!isPublished && (
+              <Fragment>
+                <SaveButton workflowId={workflowId} />
+                <PublishButton workflowId={workflowId} />
+              </Fragment>
+            )}
           </Fragment>
         )}
       </div>
