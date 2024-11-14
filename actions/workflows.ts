@@ -13,6 +13,7 @@ import { auth } from "@clerk/nextjs/server";
 import { Edge } from "@xyflow/react";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import parser from "cron-parser";
 
 export async function getWorkflowsForUser() {
   const { userId } = await auth();
@@ -265,4 +266,55 @@ export async function unPublishWorkflow(id: string) {
     },
   });
   revalidatePath(`/worflow/editor/${id}`);
+}
+
+export async function updateWorkFlowCron({
+  id,
+  cron,
+}: {
+  id: string;
+  cron: string;
+}) {
+  const { userId } = await auth();
+
+  if (!userId) {
+    throw new Error("Unauthenticated");
+  }
+
+  try {
+    const interval = parser.parseExpression(cron, { utc: true });
+    await prisma.workflow.update({
+      where: {
+        id,
+        userId,
+      },
+      data: {
+        cron,
+        nextRunAt: interval.next().toDate(),
+      },
+    });
+  } catch (error: any) {
+    console.error(error.message);
+    throw new Error("Invalid cron expression");
+  }
+  revalidatePath("/workflows");
+}
+
+export async function removeWorkflowSchedule(id: string) {
+  const { userId } = await auth();
+
+  if (!userId) {
+    throw new Error("Unauthenticated");
+  }
+  await prisma.workflow.update({
+    where: {
+      id,
+      userId,
+    },
+    data: {
+      cron: null,
+      nextRunAt: null,
+    },
+  });
+  revalidatePath("/workflows");
 }

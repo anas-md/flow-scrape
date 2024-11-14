@@ -5,11 +5,21 @@ import { Card, CardContent } from "@/components/ui/card";
 import { WorkflowStatus } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { Workflow } from "@prisma/client";
-import { FileTextIcon, PlayIcon, ShuffleIcon } from "lucide-react";
+import {
+  CoinsIcon,
+  CornerDownRightIcon,
+  FileTextIcon,
+  MoveRightIcon,
+  PlayIcon,
+  ShuffleIcon,
+} from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import WorkflowActions from "./WorkflowActions";
 import RunButton from "./RunButton";
+import SchedulerDialog from "./SchedulerDialog";
+import TooltipWrapper from "@/components/TooltipWrapper";
+import { Badge } from "@/components/ui/badge";
 
 const statusColor = {
   [WorkflowStatus.DRAFT]: "bg-yellow-400 text-yellow-600",
@@ -45,6 +55,12 @@ function WorkflowCard({ workflow }: { workflow: Workflow }) {
                 </span>
               )}
             </h3>
+            <SchedulerSection
+              isDraft={isDraft}
+              creditsCost={workflow.creditsCost}
+              workflowId={workflow.id}
+              workflowCron={workflow.cron}
+            />
           </div>
         </div>
         <div className="flex items-center space-x-2">
@@ -70,3 +86,40 @@ function WorkflowCard({ workflow }: { workflow: Workflow }) {
 }
 
 export default WorkflowCard;
+
+function SchedulerSection({
+  isDraft,
+  creditsCost,
+  workflowId,
+  workflowCron,
+}: {
+  isDraft: boolean;
+  creditsCost: number;
+  workflowId: string;
+  workflowCron: string | null;
+}) {
+  if (isDraft) return null;
+  return (
+    <div className="flex items-center gap-2">
+      <CornerDownRightIcon className="h-4 w-4 text-muted-foreground" />
+      <SchedulerDialog
+        workflowId={workflowId}
+        workflowCron={workflowCron}
+        // forcing rerender of dialog using key
+        key={`${workflowCron}-${workflowId}`}
+      />
+      <MoveRightIcon className="h-4 w-4 text-muted-foreground" />
+      <TooltipWrapper content="Credits consumption for full run">
+        <div className="flex items-center gap-3">
+          <Badge
+            variant={"outline"}
+            className="space-x-2 text-muted-foreground rounded-sm"
+          >
+            <CoinsIcon className="h-4 w-4" />
+            <span className="text-sm">{creditsCost}</span>
+          </Badge>
+        </div>
+      </TooltipWrapper>
+    </div>
+  );
+}

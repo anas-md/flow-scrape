@@ -28,6 +28,8 @@ model Workflow{
   lastRunId     String?
   lastRunStatus String?
   updatedAt     DateTime @updatedAt
+  cron          String? 
+  nextRunAt     DateTime?
   executions    WorkflowExecution[]
   @@unique([name, userId])
 }
