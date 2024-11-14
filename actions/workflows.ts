@@ -8,6 +8,7 @@ import { flowToExecutionPlan } from "@/lib/workflow/executionPlan";
 import {
   createWorkflowShema,
   createWorkflowShemaType,
+  duplicateWorkflowSchemaType,
 } from "@/schema/workflows";
 import { auth } from "@clerk/nextjs/server";
 import { Edge } from "@xyflow/react";
@@ -317,4 +318,43 @@ export async function removeWorkflowSchedule(id: string) {
     },
   });
   revalidatePath("/workflows");
+}
+
+export async function duplicateWorkflow(form: duplicateWorkflowSchemaType) {
+  const { success, data } = createWorkflowShema.safeParse(form);
+  if (!success) {
+    throw new Error("Invalid form data");
+  }
+
+  const { userId } = await auth();
+
+  if (!userId) {
+    throw new Error("Unauthenticated");
+  }
+
+  const sourceWorkflow = await prisma.workflow.findUnique({
+    where: {
+      userId,
+      id: form.workflowId,
+    },
+  });
+
+  if (!sourceWorkflow) {
+    throw new Error("Workflow not found");
+  }
+
+  const result = await prisma.workflow.create({
+    data: {
+      userId,
+      status: WorkflowStatus.DRAFT,
+      name: data.name,
+      description: data.description,
+      definition: sourceWorkflow.definition,
+    },
+  });
+  if (!result) {
+    throw new Error("Failed to duplicate workflow");
+  }
+
+  redirect("/workflows");
 }
