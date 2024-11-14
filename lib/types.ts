@@ -39,6 +39,7 @@ export enum ExecutionPhaseStatus {
 
 export enum WorkflowExecutionTrigger {
   MANUAl = "MANUAL",
+  CRON = "CRON",
 }
 
 export interface AppNodeData {

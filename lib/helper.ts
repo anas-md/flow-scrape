@@ -39,3 +39,9 @@ export function calculateWorkflowCost(nodes: AppNode[]) {
     return acc + TaskRegistry[node.data.type].credits;
   }, 0);
 }
+
+export function getAppUrl(path: string): string {
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+
+  return `${appUrl}/${path}`;
+}
