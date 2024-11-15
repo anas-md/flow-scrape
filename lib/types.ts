@@ -16,11 +16,13 @@ export enum TaskType {
   CLICK_ELEMENT = "CLICK_ELEMENT",
   WAIT_FOR_ELEMENT = "WAIT_FOR_ELEMENT",
   DELIVER_VIA_WEBHOOK = "DELIVER_VIA_WEBHOOK",
+  LOGIN_WITH_AI = "LOGIN_WITH_AI",
 }
 export enum TaskParamType {
   STRING = "STRING",
   BROWSE_INSTANCE = "BROWSE_INSTANCE",
   SELECT = "SELECT",
+  CREDENTIAL = "CREDENTIAL",
 }
 
 export enum FlowToExecutionPlanValidationError {
