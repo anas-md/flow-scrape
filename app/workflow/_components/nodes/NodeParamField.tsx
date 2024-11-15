@@ -6,6 +6,7 @@ import React, { useCallback } from "react";
 import StringParam from "./params/StringParam";
 import { useReactFlow } from "@xyflow/react";
 import BrowserInstance from "./params/BrowserInstance";
+import SelectParam from "./params/SelectParam";
 
 function NodeParamField({
   param,
@@ -21,6 +22,8 @@ function NodeParamField({
 
   const updateNodeParamValue = useCallback(
     (newValue: string) => {
+      console.log(nodeId, param.name, newValue);
+
       updateNodeData(nodeId, {
         inputs: {
           ...node?.data?.inputs,
@@ -49,6 +52,14 @@ function NodeParamField({
           param={param}
           updateNodeParamValue={updateNodeParamValue}
           value=""
+        />
+      );
+    case TaskParamType.SELECT:
+      return (
+        <SelectParam
+          param={param}
+          updateNodeParamValue={updateNodeParamValue}
+          value={value}
         />
       );
 

@@ -4,6 +4,7 @@ import { PageToHtmlExecutor } from "./PageToHtmlExecutor";
 import { ExtractTextFromElement } from "./ExtractTextFromElementExecutor";
 import { FillInputExecutor } from "./FillInputExecutor";
 import { ClickElementExecutor } from "./ClickElementExecutor";
+import { WaitForElementExecutor } from "./WaitForElementExecutor";
 
 type ExecutorFunction<T extends WorkflowTask> = (
   enviornment: ExecutionEnviornment<T>
@@ -19,4 +20,5 @@ export const ExecutorRegistry: RegistryType = {
   EXTRACT_TEXT_FROM_ELEMENT: ExtractTextFromElement,
   FILL_INPUT: FillInputExecutor,
   CLICK_ELEMENT: ClickElementExecutor,
+  WAIT_FOR_ELEMENT: WaitForElementExecutor,
 };
