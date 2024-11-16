@@ -83,7 +83,7 @@ export async function LoginWithAiExecutor(
       return false;
     }
 
-    enviornment.setOutput("Extracted Data", result);
+    enviornment.setOutput("Extracted Data", JSON.stringify(result));
 
     return true;
   } catch (error: any) {
