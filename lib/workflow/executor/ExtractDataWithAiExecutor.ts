@@ -1,11 +1,11 @@
 import { ExecutionEnviornment } from "@/lib/types";
-import { LoginWithAiTask } from "../task/LoginWithAi";
+import { ExtractDataWithAiTask } from "../task/ExtractDataWithAi";
 import prisma from "@/lib/prisma";
 import { symmetricDecrypt } from "@/lib/credential";
 import OpenAi from "openai";
 
-export async function LoginWithAiExecutor(
-  enviornment: ExecutionEnviornment<typeof LoginWithAiTask>
+export async function ExtractDataWithAiExecutor(
+  enviornment: ExecutionEnviornment<typeof ExtractDataWithAiTask>
 ): Promise<boolean> {
   try {
     const credentialId = enviornment.getInput("Credentials");

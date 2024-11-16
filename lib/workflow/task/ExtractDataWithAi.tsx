@@ -1,9 +1,9 @@
 import { TaskParamType, TaskType, WorkflowTask } from "@/lib/types";
 import { BrainIcon, LucideProps } from "lucide-react";
 
-export const LoginWithAiTask = {
-  type: TaskType.LOGIN_WITH_AI,
-  label: "Login with AI",
+export const ExtractDataWithAiTask = {
+  type: TaskType.EXTRACT_DATA_WITH_AI,
+  label: "Extract data with AI",
   icon: (props: LucideProps) => (
     <BrainIcon className="stroke-rose-400" {...props} />
   ),
