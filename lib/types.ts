@@ -133,3 +133,8 @@ export type ExecutionEnviornment<T extends WorkflowTask> = {
   getPage(): Page | undefined;
   log: LogCollector;
 };
+
+export type Period = {
+  year: number;
+  month: number;
+};

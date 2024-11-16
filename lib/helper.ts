@@ -1,6 +1,6 @@
 import { ExecutionPhase } from "@prisma/client";
-import { intervalToDuration } from "date-fns";
-import { AppNode } from "./types";
+import { endOfMonth, intervalToDuration, startOfMonth } from "date-fns";
+import { AppNode, Period } from "./types";
 import { TaskRegistry } from "./workflow/task/Registry";
 
 export function waitFor(ms: number) {
@@ -44,4 +44,11 @@ export function getAppUrl(path: string): string {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL;
 
   return `${appUrl}/${path}`;
+}
+
+export function periodToDateRange(period: Period) {
+  const startDate = startOfMonth(new Date(period.year, period.month));
+  const endDate = endOfMonth(new Date(period.year, period.month));
+
+  return { startDate, endDate };
 }

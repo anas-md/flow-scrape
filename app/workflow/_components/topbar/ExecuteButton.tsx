@@ -30,6 +30,7 @@ function ExecuteButton({ workflowId }: { workflowId: string }) {
       onClick={() => {
         const plan = generateExecutionPlan();
         if (!plan) return;
+        toast.success("Starting execution...", { id: "flow-execution" });
         mutation.mutate({
           workflowId,
           flowDefinition: JSON.stringify(toObject()),
