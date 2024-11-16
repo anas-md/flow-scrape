@@ -138,3 +138,11 @@ export type Period = {
   year: number;
   month: number;
 };
+
+export type WorkflowExecutionType = Record<
+  string,
+  {
+    success: number;
+    failed: number;
+  }
+>;

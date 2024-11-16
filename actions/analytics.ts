@@ -2,8 +2,14 @@
 
 import { periodToDateRange } from "@/lib/helper";
 import prisma from "@/lib/prisma";
-import { Period, WorkflowExecutionStatus } from "@/lib/types";
+import {
+  ExecutionPhaseStatus,
+  Period,
+  WorkflowExecutionStatus,
+  WorkflowExecutionType,
+} from "@/lib/types";
 import { auth } from "@clerk/nextjs/server";
+import { eachDayOfInterval, format } from "date-fns";
 
 export async function getPeriods() {
   const { userId } = await auth();
@@ -88,4 +94,110 @@ export async function getStatsCardsValue(period: Period) {
   );
 
   return stats;
+}
+
+export async function getWorkflowExecutionsStats(period: Period) {
+  const { userId } = await auth();
+
+  if (!userId) {
+    throw new Error("Unauthenticated");
+  }
+
+  const dateRange = periodToDateRange(period);
+
+  const executions = await prisma.workflowExecution.findMany({
+    where: {
+      userId,
+      startedAt: {
+        gte: dateRange.startDate,
+        lte: dateRange.endDate,
+      },
+      status: {
+        in: [ExecutionPhaseStatus.COMPLETED, ExecutionPhaseStatus.FAILED],
+      },
+    },
+  });
+
+  const stats: WorkflowExecutionType = eachDayOfInterval({
+    start: dateRange.startDate,
+    end: dateRange.endDate,
+  })
+    .map((date) => format(date, "yyyy-MM-dd"))
+    .reduce((acc, date) => {
+      acc[date] = {
+        success: 0,
+        failed: 0,
+      };
+      return acc;
+    }, {} as any);
+
+  executions.forEach((execution) => {
+    const date = format(execution.startedAt!, "yyyy-MM-dd");
+
+    if (execution.status === WorkflowExecutionStatus.COMPLETED) {
+      stats[date].success! += 1;
+    }
+
+    if (execution.status === WorkflowExecutionStatus.FAILED) {
+      stats[date].failed! += 1;
+    }
+  });
+
+  const result = Object.entries(stats).map(([date, infos]) => ({
+    date,
+    ...infos,
+  }));
+
+  return result;
+}
+export async function getCreditsUsageInPeriod(period: Period) {
+  const { userId } = await auth();
+
+  if (!userId) {
+    throw new Error("Unauthenticated");
+  }
+
+  const dateRange = periodToDateRange(period);
+
+  const executionsPhases = await prisma.workflowExecution.findMany({
+    where: {
+      userId,
+      startedAt: {
+        gte: dateRange.startDate,
+        lte: dateRange.endDate,
+      },
+    },
+  });
+
+  const stats: WorkflowExecutionType = eachDayOfInterval({
+    start: dateRange.startDate,
+    end: dateRange.endDate,
+  })
+    .map((date) => format(date, "yyyy-MM-dd"))
+    .reduce((acc, date) => {
+      acc[date] = {
+        success: 0,
+        failed: 0,
+      };
+      return acc;
+    }, {} as any);
+
+  executionsPhases.forEach((phase) => {
+    const date = format(phase.startedAt!, "yyyy-MM-dd");
+
+    if (phase.status === ExecutionPhaseStatus.COMPLETED) {
+      stats[date].success! += phase.creditsConsumed || 0;
+    }
+
+    if (phase.status === ExecutionPhaseStatus.FAILED) {
+      stats[date].failed! += phase.creditsConsumed || 0;
+    }
+  });
+
+  const result = Object.entries(stats).map(([date, infos]) => ({
+    date,
+    ...infos,
+  }));
+
+  return result;
 }

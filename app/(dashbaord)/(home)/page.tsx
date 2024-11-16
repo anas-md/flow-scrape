@@ -1,10 +1,17 @@
-import { getPeriods, getStatsCardsValue } from "@/actions/analytics";
+import {
+  getCreditsUsageInPeriod,
+  getPeriods,
+  getStatsCardsValue,
+  getWorkflowExecutionsStats,
+} from "@/actions/analytics";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Period } from "@/lib/types";
 import { CirclePlayIcon, CoinsIcon, WaypointsIcon } from "lucide-react";
 import { Suspense } from "react";
 import PeriodSelector from "./_components/PeriodSelector";
 import StatsCard from "./_components/StatsCard";
+import ExecutionStatusChart from "./_components/ExecutionStatusChart";
+import CreditUsageChart from "../billing/_components/CreditUsageChart";
 
 function Homepage({
   searchParams,
@@ -27,9 +34,15 @@ function Homepage({
           <PeriodSelectorWrapper selectedPeriod={period} />
         </Suspense>
       </div>
-      <div className="h-full py-6 flex flex-col">
+      <div className="h-full py-6 flex flex-col gap-5">
         <Suspense fallback={<StatsCardSkeleton />}>
           <StatsCards selectedPeriod={period} />
+        </Suspense>{" "}
+        <Suspense fallback={<Skeleton className="w-full h-[300px]" />}>
+          <StatsExecutionStatus period={period} />
+        </Suspense>
+        <Suspense fallback={<Skeleton className="w-full h-[300px]" />}>
+          <CreditsUsageInPeriod period={period} />
         </Suspense>
       </div>
     </div>
@@ -68,6 +81,23 @@ async function StatsCards({ selectedPeriod }: { selectedPeriod: Period }) {
         icon={CoinsIcon}
       />
     </div>
+  );
+}
+
+async function StatsExecutionStatus({ period }: { period: Period }) {
+  const data = await getWorkflowExecutionsStats(period);
+
+  return <ExecutionStatusChart data={data} />;
+}
+async function CreditsUsageInPeriod({ period }: { period: Period }) {
+  const data = await getCreditsUsageInPeriod(period);
+
+  return (
+    <CreditUsageChart
+      data={data}
+      title="Daily credits spent"
+      description="Daily credits consumed in selected period"
+    />
   );
 }
 
