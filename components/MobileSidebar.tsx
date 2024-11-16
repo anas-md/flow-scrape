@@ -13,10 +13,10 @@ function MobileSidebar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
-  const activeRoute =
-    routes.find(
-      (route) => route.href.length > 0 && pathname.includes(route.href)
-    ) || routes[0];
+  // const activeRoute =
+  //   routes.find(
+  //     (route) => route.href.length > 0 && pathname.includes(route.href)
+  //   ) || routes[0];
 
   return (
     <div className="block border-separate bg-background md:hidden">
@@ -40,7 +40,7 @@ function MobileSidebar() {
                   href={route.href}
                   className={buttonVariants({
                     variant:
-                      activeRoute.href === route.href
+                      pathname === route.href
                         ? "sidebarActiveitem"
                         : "sidebarItem",
                   })}
