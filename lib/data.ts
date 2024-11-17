@@ -7,7 +7,7 @@ import {
 
 export const routes = [
   {
-    href: "/",
+    href: "/home",
     label: "Home",
     icon: HomeIcon,
   },
