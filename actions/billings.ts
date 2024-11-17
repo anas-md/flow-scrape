@@ -46,7 +46,7 @@ export async function setupUser() {
     });
   }
 
-  redirect("/");
+  redirect("/home");
 }
 
 export async function purchaseCredits(packId: PackId) {
