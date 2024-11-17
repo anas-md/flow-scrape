@@ -1,9 +1,10 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { headerRoutes } from "@/lib/data";
-import { ZapIcon } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { headerRoutes, routes } from "@/lib/data";
+import { MenuIcon, XIcon, ZapIcon } from "lucide-react";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 function Navbar() {
   const scrollIntoView = (ele: string) => {
@@ -14,6 +15,54 @@ function Navbar() {
       behavior: "smooth",
     });
   };
+
+  const isMobile = useIsMobile();
+  useEffect(() => {
+    setIsMobileOpen(false);
+  }, [isMobile]);
+
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
+
+  if (isMobile) {
+    return (
+      <div className="p-5 sticky top-0 left-0 z-50">
+        {!isMobileOpen ? (
+          <MenuIcon className="" onClick={() => setIsMobileOpen(true)} />
+        ) : (
+          <aside className="h-screen w-full box-border p-5 backdrop-blur-md absolute top-0 left-0 z-50">
+            <XIcon onClick={() => setIsMobileOpen(false)} />
+            <div className="mt-5 flex flex-col gap-5 h-full text-center items-center pt-60">
+              {headerRoutes.map((route) =>
+                route?.button ? (
+                  <Button
+                    key={route.href}
+                    className="hover:bg-white group w-max"
+                  >
+                    <Link
+                      className="text-lg font-light text-white group-hover:text-primary"
+                      href={route.href}
+                    >
+                      {route.title}
+                    </Link>
+                  </Button>
+                ) : (
+                  <span
+                    className="text-lg font-light hover:text-white cursor-pointer select-none"
+                    key={route.href}
+                    onClick={() => {
+                      scrollIntoView(route.href);
+                    }}
+                  >
+                    {route.title}
+                  </span>
+                )
+              )}
+            </div>
+          </aside>
+        )}
+      </div>
+    );
+  }
 
   return (
     <header className="px-4 lg:px-6 h-14 flex items-center max-w-screen-xl mx-auto w-full text-primary py-10 sticky top-0 backdrop-blur-sm">
