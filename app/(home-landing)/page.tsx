@@ -31,7 +31,7 @@ export default function HomeLandingPage() {
             className="w-40 h-10 rounded-xl text-sm border-primary text-primary hover:text-white hover:bg-primary"
             variant={"outline"}
           >
-            Get Started
+            <Link href={"/sign-in"}>Get Started</Link>
             <ChevronRightIcon className="h-4 w-4" />
           </Button>
         </div>
