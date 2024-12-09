@@ -73,14 +73,15 @@ function Navbar() {
       <nav className="ml-auto flex gap-4 sm:gap-6 items-center">
         {headerRoutes.map((route) =>
           route?.button ? (
-            <Button key={route.href} className="hover:bg-white group">
-              <Link
-                className="text-sm font-medium text-white group-hover:text-primary"
-                href={route.href}
-              >
+            <Link
+              className="text-sm font-medium text-white group-hover:text-primary"
+              href={route.href}
+              key={route.href}
+            >
+              <Button className="hover:bg-white group text-white hover:text-primary">
                 {route.title}
-              </Link>
-            </Button>
+              </Button>
+            </Link>
           ) : (
             <span
               className="text-sm font-medium hover:text-white cursor-pointer select-none"
