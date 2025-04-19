@@ -1,7 +1,7 @@
 import crypto from "crypto";
 import "server-only";
 
-const encALG = "aes-256-cbc"; //Encryption algo name
+const encALG = "aes-256-cbc"; //Encryption algorithm
 
 export function symmetricEncrypt(data: string): string {
   const key = process.env.ENCRYPTION_KEY;
@@ -10,7 +10,7 @@ export function symmetricEncrypt(data: string): string {
     throw new Error("Encryption key not found");
   }
 
-  const iv = crypto.randomBytes(16); // initialization-vector lets u generate unique encryption form same data each time
+  const iv = crypto.randomBytes(16); // Initialization-vector; generates unique encryption for the same data each time
 
   const cipher = crypto.createCipheriv(encALG, Buffer.from(key, "hex"), iv);
 

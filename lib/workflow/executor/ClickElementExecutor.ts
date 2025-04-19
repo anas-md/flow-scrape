@@ -1,21 +1,21 @@
-import { ExecutionEnviornment } from "@/lib/types";
+import { ExecutionEnvironment } from "@/lib/types";
 import { ClickElementTask } from "../task/ClickElement";
 
 export async function ClickElementExecutor(
-  enviornment: ExecutionEnviornment<typeof ClickElementTask>
+  environment: ExecutionEnvironment<typeof ClickElementTask>
 ): Promise<boolean> {
   try {
-    const selector = enviornment.getInput("Selector");
+    const selector = environment.getInput("Selector");
     if (!selector) {
-      enviornment.log.error("input -> selector is not defined");
+      environment.log.error("input -> selector is not defined");
       return false;
     }
 
-    await enviornment.getPage()!.click(selector);
+    await environment.getPage()!.click(selector);
 
     return true;
   } catch (error: any) {
-    enviornment.log.error(error.message);
+    environment.log.error(error.message);
     return false;
   }
 }

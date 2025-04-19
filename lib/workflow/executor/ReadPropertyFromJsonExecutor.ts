@@ -1,19 +1,19 @@
-import { ExecutionEnviornment } from "@/lib/types";
+import { ExecutionEnvironment } from "@/lib/types";
 import { ReadPropertyFromJsonTask } from "../task/ReadPropertyFromJson";
 
 export async function ReadPropertyFromJsonExecutor(
-  enviornment: ExecutionEnviornment<typeof ReadPropertyFromJsonTask>
+  environment: ExecutionEnvironment<typeof ReadPropertyFromJsonTask>
 ): Promise<boolean> {
   try {
-    let jsonData = enviornment.getInput("JSON");
+    let jsonData = environment.getInput("JSON");
     if (!jsonData) {
-      enviornment.log.error("input -> JSON is not defined");
+      environment.log.error("input -> JSON is not defined");
       return false;
     }
-    const propertyName = enviornment.getInput("Property name");
+    const propertyName = environment.getInput("Property name");
 
     if (!propertyName) {
-      enviornment.log.error("input -> Property is not defined");
+      environment.log.error("input -> Property is not defined");
       return false;
     }
     const json = JSON.parse(jsonData);
@@ -21,15 +21,15 @@ export async function ReadPropertyFromJsonExecutor(
     const propertValue = json[propertyName];
 
     if (!propertValue) {
-      enviornment.log.error("Property not found");
+      environment.log.error("Property not found");
       return false;
     }
 
-    enviornment.setOutput("Property Value", propertValue);
+    environment.setOutput("Property Value", propertValue);
 
     return true;
   } catch (error: any) {
-    enviornment.log.error(error.message);
+    environment.log.error(error.message);
     return false;
   }
 }

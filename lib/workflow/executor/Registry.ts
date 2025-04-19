@@ -1,11 +1,11 @@
-import { ExecutionEnviornment, TaskType, WorkflowTask } from "@/lib/types";
+import { ExecutionEnvironment, TaskType, WorkflowTask } from "@/lib/types";
 import { LaunchBrowserExecutor } from "./LaunchBrowserExecutor";
 import { PageToHtmlExecutor } from "./PageToHtmlExecutor";
 import { ExtractTextFromElement } from "./ExtractTextFromElementExecutor";
 import { FillInputExecutor } from "./FillInputExecutor";
 import { ClickElementExecutor } from "./ClickElementExecutor";
 import { WaitForElementExecutor } from "./WaitForElementExecutor";
-import { DeviverViaWebHookExecutor } from "./DeliverViaWebHookExecutor";
+import { DeliverViaWebHookExecutor } from "./DeliverViaWebHookExecutor";
 import { ExtractDataWithAiExecutor } from "./ExtractDataWithAiExecutor";
 import { ReadPropertyFromJsonExecutor } from "./ReadPropertyFromJsonExecutor";
 import { AddPropertyToJsonExecutor } from "./AddPropertyToJsonExecutor ";
@@ -13,7 +13,7 @@ import { NavigateUrlExecutor } from "./NavigateUrlExecutor";
 import { ScrollToElementExecutor } from "./ScrollToElementExecutor";
 
 type ExecutorFunction<T extends WorkflowTask> = (
-  enviornment: ExecutionEnviornment<T>
+  environment: ExecutionEnvironment<T>
 ) => Promise<boolean>;
 
 type RegistryType = {
@@ -27,7 +27,7 @@ export const ExecutorRegistry: RegistryType = {
   FILL_INPUT: FillInputExecutor,
   CLICK_ELEMENT: ClickElementExecutor,
   WAIT_FOR_ELEMENT: WaitForElementExecutor,
-  DELIVER_VIA_WEBHOOK: DeviverViaWebHookExecutor,
+  DELIVER_VIA_WEBHOOK: DeliverViaWebHookExecutor,
   EXTRACT_DATA_WITH_AI: ExtractDataWithAiExecutor,
   READ_PROPERTY_FROM_JSON: ReadPropertyFromJsonExecutor,
   ADD_PROPERTY_TO_JSON: AddPropertyToJsonExecutor,

@@ -53,16 +53,16 @@ export async function runWorkflow(form: {
   } else {
     // Otherwise generating execution plan from flow-definition passed
     if (!flowDefinition) {
-      throw new Error("Flow definition is not defined");
+      throw new Error("Flux definition is not defined");
     }
 
     const flow = JSON.parse(flowDefinition);
     const result = flowToExecutionPlan(flow.nodes, flow.edges);
     if (result.error) {
-      throw new Error("Flow definition not valid");
+      throw new Error("Flux definition not valid");
     }
     if (!result.executionPlan) {
-      throw new Error("No execution plan generated, Something went wrong");
+      throw new Error("No execution plan generated, something went wrong");
     }
     executionPlan = result.executionPlan;
   }

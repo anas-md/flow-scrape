@@ -83,8 +83,8 @@ function CreateCredentialDialog({ triggeredText }: { triggeredText?: string }) {
                       <Input {...field} />
                     </FormControl>
                     <FormDescription>
-                      Enter an unique and descriptive name for credential <br />
-                      This name will be used to identify credential
+                      Enter an unique and descriptive name for credential. <br />
+                      This name will be used to identify the credential.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -98,15 +98,15 @@ function CreateCredentialDialog({ triggeredText }: { triggeredText?: string }) {
                     <FormLabel className="flex gap-1 items-center">
                       Description{" "}
                       <p className="text-xs text-muted-foreground">
-                        (optinoal)
+                        (optional)
                       </p>
                     </FormLabel>
                     <FormControl>
                       <Textarea {...field} className="resize-none" />
                     </FormControl>
                     <FormDescription>
-                      Enter the value assosiated with this credential <br />
-                      This value wiil be securely encrypted and stored
+                      Enter the value associated with this credential. <br />
+                      This value will be securely encrypted and stored.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>

@@ -3,8 +3,8 @@ import "server-only";
 import prisma from "../prisma";
 import {
   AppNode,
-  Enviornment,
-  ExecutionEnviornment,
+  Environment,
+  ExecutionEnvironment,
   ExecutionPhaseStatus,
   LogCollector,
   TaskParamType,
@@ -31,7 +31,7 @@ export async function executeWorkflow(executionId: string, nextRunAt?: Date) {
 
   const edges = JSON.parse(execution.definition).edges as Edge[];
 
-  const enviornment = { phases: {} };
+  const environment = { phases: {} };
   await initializeWorkflowExecution(
     executionId,
     execution.workflowId,
@@ -45,7 +45,7 @@ export async function executeWorkflow(executionId: string, nextRunAt?: Date) {
   for (const phase of execution.phases) {
     const phaseExecution = await executeWorkflowPhase(
       phase,
-      enviornment,
+      environment,
       edges,
       execution.userId
     );
@@ -62,7 +62,7 @@ export async function executeWorkflow(executionId: string, nextRunAt?: Date) {
     executionFailed,
     creditsConsumed
   );
-  await cleanupEnviornment(enviornment);
+  await cleanupEnvironment(environment);
 
   revalidatePath(`/worflow/runs`);
 }
@@ -146,7 +146,7 @@ async function finalizeWorkflowExecution(
 
 async function executeWorkflowPhase(
   phase: ExecutionPhase,
-  enviornment: Enviornment,
+  environment: Environment,
   edges: Edge[],
   userId: string
 ) {
@@ -154,7 +154,7 @@ async function executeWorkflowPhase(
   const logCollector = createLogCollector();
 
   const node = JSON.parse(phase.node) as AppNode;
-  setupEnviornmentForPhase(node, enviornment, edges);
+  setupEnvironmentForPhase(node, environment, edges);
   // Update the status
 
   await prisma.executionPhase.update({
@@ -164,7 +164,7 @@ async function executeWorkflowPhase(
     data: {
       status: ExecutionPhaseStatus.RUNNING,
       startedAt,
-      inputs: JSON.stringify(enviornment.phases[node.id].inputs),
+      inputs: JSON.stringify(environment.phases[node.id].inputs),
     },
   });
 
@@ -175,9 +175,9 @@ async function executeWorkflowPhase(
   const creditsConsumed = success ? creditsRequired : 0;
   if (success) {
     // executing phase only when credits are available and deducted
-    success = await executePhase(phase, node, enviornment, logCollector);
+    success = await executePhase(phase, node, environment, logCollector);
   }
-  const outputs = enviornment.phases[node.id].outputs;
+  const outputs = environment.phases[node.id].outputs;
   await finalizePhase(
     phase.id,
     success,
@@ -224,7 +224,7 @@ async function finalizePhase(
 async function executePhase(
   phase: ExecutionPhase,
   node: AppNode,
-  enviornment: Enviornment,
+  environment: Environment,
   logCollector: LogCollector
 ): Promise<boolean> {
   const runFc = ExecutorRegistry[node.data.type];
@@ -233,18 +233,18 @@ async function executePhase(
     return false;
   }
 
-  const executionEnviornment: ExecutionEnviornment<any> =
-    createExecutionEnviornment(node, enviornment, logCollector);
+  const executionEnvironment: ExecutionEnvironment<any> =
+    createExecutionEnvironment(node, environment, logCollector);
 
-  return await runFc(executionEnviornment);
+  return await runFc(executionEnvironment);
 }
 
-function setupEnviornmentForPhase(
+function setupEnvironmentForPhase(
   node: AppNode,
-  enviornment: Enviornment,
+  environment: Environment,
   edges: Edge[]
 ) {
-  enviornment.phases[node.id] = {
+  environment.phases[node.id] = {
     inputs: {},
     outputs: {},
   };
@@ -255,7 +255,7 @@ function setupEnviornmentForPhase(
     const inputValue = node.data.inputs[input.name];
     if (inputValue) {
       // Input value is defined by user
-      enviornment.phases[node.id].inputs[input.name] = inputValue;
+      environment.phases[node.id].inputs[input.name] = inputValue;
       continue;
     }
     // The input value is coming form ouptut of previous node
@@ -274,37 +274,37 @@ function setupEnviornmentForPhase(
     }
 
     const outputValue =
-      enviornment.phases[connectedEdge!.source].outputs[
+      environment.phases[connectedEdge!.source].outputs[
         connectedEdge!.sourceHandle!
       ];
 
-    enviornment.phases[node.id].inputs[input.name] = outputValue;
+    environment.phases[node.id].inputs[input.name] = outputValue;
   }
 }
 
-function createExecutionEnviornment(
+function createExecutionEnvironment(
   node: AppNode,
-  enviornment: Enviornment,
+  environment: Environment,
   logCollector: LogCollector
-): ExecutionEnviornment<any> {
+): ExecutionEnvironment<any> {
   return {
-    getInput: (name: string) => enviornment.phases[node.id]?.inputs[name],
+    getInput: (name: string) => environment.phases[node.id]?.inputs[name],
     setOutput: (name: string, value: string) => {
-      enviornment.phases[node.id].outputs[name] = value;
+      environment.phases[node.id].outputs[name] = value;
     },
-    getBrowser: () => enviornment.browser,
+    getBrowser: () => environment.browser,
     setBrowser: (browser: Browser) => {
-      enviornment.browser = browser;
+      environment.browser = browser;
     },
-    setPage: (page: Page) => (enviornment.page = page),
-    getPage: () => enviornment.page,
+    setPage: (page: Page) => (environment.page = page),
+    getPage: () => environment.page,
     log: logCollector,
   };
 }
 
-async function cleanupEnviornment(enviornment: Enviornment) {
-  if (enviornment.browser) {
-    await enviornment.browser.close().catch((err) => {
+async function cleanupEnvironment(environment: Environment) {
+  if (environment.browser) {
+    await environment.browser.close().catch((err) => {
       console.log("Cannot close browser, reason:", err);
     });
   }

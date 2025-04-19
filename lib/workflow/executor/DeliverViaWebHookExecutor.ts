@@ -1,18 +1,18 @@
-import { ExecutionEnviornment } from "@/lib/types";
+import { ExecutionEnvironment } from "@/lib/types";
 import { DeliverViaWebHookTask } from "../task/DeliverViaWebHook";
 
-export async function DeviverViaWebHookExecutor(
-  enviornment: ExecutionEnviornment<typeof DeliverViaWebHookTask>
+export async function DeliverViaWebHookExecutor(
+  environment: ExecutionEnvironment<typeof DeliverViaWebHookTask>
 ): Promise<boolean> {
   try {
-    const targetUrl = enviornment.getInput("Target url");
+    const targetUrl = environment.getInput("Target url");
     if (!targetUrl) {
-      enviornment.log.error("input -> targetUrl is not defined");
+      environment.log.error("input -> targetUrl is not defined");
       return false;
     }
-    const body = enviornment.getInput("Body");
+    const body = environment.getInput("Body");
     if (!body) {
-      enviornment.log.error("input -> Body is not defined");
+      environment.log.error("input -> Body is not defined");
       return false;
     }
 
@@ -27,16 +27,16 @@ export async function DeviverViaWebHookExecutor(
     const resStatus = res.status;
 
     if (resStatus !== 200) {
-      enviornment.log.error(`Status Code ${resStatus}`);
+      environment.log.error(`Status Code ${resStatus}`);
       return false;
     }
 
     const resBody = await res.json();
-    enviornment.log.info(JSON.stringify(resBody, null, 4));
+    environment.log.info(JSON.stringify(resBody, null, 4));
 
     return true;
   } catch (error: any) {
-    enviornment.log.error(error.message);
+    environment.log.error(error.message);
     return false;
   }
 }

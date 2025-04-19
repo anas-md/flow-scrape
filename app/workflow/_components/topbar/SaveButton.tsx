@@ -14,10 +14,10 @@ function SaveButton({ workflowId }: { workflowId: string }) {
   const saveMutation = useMutation({
     mutationFn: updateWorkFlow,
     onSuccess: () => {
-      toast.success("Flow saved successfully", { id: "save-workflow" });
+      toast.success("Flux saved successfully", { id: "save-workflow" });
     },
     onError: () => {
-      toast.error("Somwthing went wrong", { id: "save-workflow" });
+      toast.error("Something went wrong", { id: "save-workflow" });
     },
   });
 

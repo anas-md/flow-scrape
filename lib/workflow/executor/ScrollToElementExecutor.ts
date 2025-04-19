@@ -1,17 +1,17 @@
-import { ExecutionEnviornment } from "@/lib/types";
+import { ExecutionEnvironment } from "@/lib/types";
 import { ScrollToElementTask } from "../task/ScrollToElement";
 
 export async function ScrollToElementExecutor(
-  enviornment: ExecutionEnviornment<typeof ScrollToElementTask>
+  environment: ExecutionEnvironment<typeof ScrollToElementTask>
 ): Promise<boolean> {
   try {
-    const selector = enviornment.getInput("Selector");
+    const selector = environment.getInput("Selector");
     if (!selector) {
-      enviornment.log.error("input -> selector is not defined");
+      environment.log.error("input -> selector is not defined");
       return false;
     }
 
-    await enviornment.getPage()!.evaluate((eleSelector) => {
+    await environment.getPage()!.evaluate((eleSelector) => {
       const element = document.querySelector(eleSelector);
       if (!element) {
         throw new Error("Element not found");
@@ -22,7 +22,7 @@ export async function ScrollToElementExecutor(
 
     return true;
   } catch (error: any) {
-    enviornment.log.error(error.message);
+    environment.log.error(error.message);
     return false;
   }
 }

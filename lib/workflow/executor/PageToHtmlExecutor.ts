@@ -1,15 +1,15 @@
-import { ExecutionEnviornment } from "@/lib/types";
+import { ExecutionEnvironment } from "@/lib/types";
 import { PageToHtmlTask } from "../task/PageToHtml";
 
 export async function PageToHtmlExecutor(
-  enviornment: ExecutionEnviornment<typeof PageToHtmlTask>
+  environment: ExecutionEnvironment<typeof PageToHtmlTask>
 ): Promise<boolean> {
   try {
-    const html = await enviornment.getPage()!.content();
-    enviornment.setOutput("HTML", html);
+    const html = await environment.getPage()!.content();
+    environment.setOutput("HTML", html);
     return true;
   } catch (error: any) {
-    enviornment.log.error(error.message);
+    environment.log.error(error.message);
     return false;
   }
 }

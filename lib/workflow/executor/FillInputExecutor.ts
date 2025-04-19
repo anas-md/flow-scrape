@@ -1,27 +1,27 @@
-import { ExecutionEnviornment } from "@/lib/types";
+import { ExecutionEnvironment } from "@/lib/types";
 import { FillInputTask } from "../task/FillInput";
 
 export async function FillInputExecutor(
-  enviornment: ExecutionEnviornment<typeof FillInputTask>
+  environment: ExecutionEnvironment<typeof FillInputTask>
 ): Promise<boolean> {
   try {
-    const selector = enviornment.getInput("Selector");
+    const selector = environment.getInput("Selector");
     if (!selector) {
-      enviornment.log.error("input -> selector is not defined");
+      environment.log.error("input -> selector is not defined");
       return false;
     }
 
-    const value = enviornment.getInput("Value");
+    const value = environment.getInput("Value");
     if (!value) {
-      enviornment.log.error("input -> value is not defined");
+      environment.log.error("input -> value is not defined");
       return false;
     }
 
-    await enviornment.getPage()!.type(selector, value);
+    await environment.getPage()!.type(selector, value);
 
     return true;
   } catch (error: any) {
-    enviornment.log.error(error.message);
+    environment.log.error(error.message);
     return false;
   }
 }

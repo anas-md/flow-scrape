@@ -100,7 +100,7 @@ function CreateWorkflowDialog({ triggeredText }: { triggeredText?: string }) {
                     <FormLabel className="flex gap-1 items-center">
                       Description{" "}
                       <p className="text-xs text-muted-foreground">
-                        (optinoal)
+                        (optional)
                       </p>
                     </FormLabel>
                     <FormControl>

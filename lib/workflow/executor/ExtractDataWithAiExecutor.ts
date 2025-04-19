@@ -1,26 +1,26 @@
-import { ExecutionEnviornment } from "@/lib/types";
+import { ExecutionEnvironment } from "@/lib/types";
 import { ExtractDataWithAiTask } from "../task/ExtractDataWithAi";
 import prisma from "@/lib/prisma";
 import { symmetricDecrypt } from "@/lib/credential";
 import OpenAi from "openai";
 
 export async function ExtractDataWithAiExecutor(
-  enviornment: ExecutionEnviornment<typeof ExtractDataWithAiTask>
+  environment: ExecutionEnvironment<typeof ExtractDataWithAiTask>
 ): Promise<boolean> {
   try {
-    const credentialId = enviornment.getInput("Credentials");
+    const credentialId = environment.getInput("Credentials");
     if (!credentialId) {
-      enviornment.log.error("input -> credentials is not defined");
+      environment.log.error("input -> credentials is not defined");
       return false;
     }
-    const content = enviornment.getInput("Content");
+    const content = environment.getInput("Content");
     if (!content) {
-      enviornment.log.error("input -> content is not defined");
+      environment.log.error("input -> content is not defined");
       return false;
     }
-    const prompt = enviornment.getInput("Prompt");
+    const prompt = environment.getInput("Prompt");
     if (!prompt) {
-      enviornment.log.error("input -> prompt is not defined");
+      environment.log.error("input -> prompt is not defined");
       return false;
     }
 
@@ -31,14 +31,14 @@ export async function ExtractDataWithAiExecutor(
     });
 
     if (!credential) {
-      enviornment.log.error("Credential no found");
+      environment.log.error("Credential no found");
       return false;
     }
 
     const plainCredentialValue = symmetricDecrypt(credential.value);
 
     if (!plainCredentialValue) {
-      enviornment.log.error("Cannot decrypt credential");
+      environment.log.error("Cannot decrypt credential");
       return false;
     }
 
@@ -66,11 +66,11 @@ export async function ExtractDataWithAiExecutor(
       temperature: 1,
     });
 
-    enviornment.log.info(
+    environment.log.info(
       `Prompt tokens used: ${JSON.stringify(response.usage?.prompt_tokens)}`
     );
 
-    enviornment.log.info(
+    environment.log.info(
       `Completition tokens used: ${JSON.stringify(
         response.usage?.completion_tokens
       )}`
@@ -79,15 +79,15 @@ export async function ExtractDataWithAiExecutor(
     const result = response.choices[0].message?.content;
 
     if (!result) {
-      enviornment.log.error("Empty response from AI");
+      environment.log.error("Empty response from AI");
       return false;
     }
 
-    enviornment.setOutput("Extracted Data", JSON.stringify(result));
+    environment.setOutput("Extracted Data", JSON.stringify(result));
 
     return true;
   } catch (error: any) {
-    enviornment.log.error(error.message);
+    environment.log.error(error.message);
     return false;
   }
 }

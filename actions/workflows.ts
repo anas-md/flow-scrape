@@ -211,7 +211,7 @@ export async function publishWorkflow({
   const result = flowToExecutionPlan(flow.nodes, flow.edges);
 
   if (result.error) {
-    throw new Error("Flow definition not valid");
+    throw new Error("Flux definition not valid");
   }
 
   if (!result.executionPlan) {

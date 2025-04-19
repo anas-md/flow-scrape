@@ -8,8 +8,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Flow srape",
-  description: "Build your own flow and scrape data with ease",
+  title: "Flux Scrape",
+  description: "Build your own flux in motion and scrape data with ease",
   openGraph: {
     images: `${process.env.APP_URL}/og-image.png`,
   },

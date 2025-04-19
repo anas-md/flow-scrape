@@ -1,20 +1,20 @@
-import { ExecutionEnviornment } from "@/lib/types";
+import { ExecutionEnvironment } from "@/lib/types";
 import * as cheerio from "cheerio";
 import { ExtractTextFromElementTask } from "../task/ExtractTextFromElement";
 
 export async function ExtractTextFromElement(
-  enviornment: ExecutionEnviornment<typeof ExtractTextFromElementTask>
+  environment: ExecutionEnvironment<typeof ExtractTextFromElementTask>
 ): Promise<boolean> {
   try {
-    const selector = enviornment.getInput("Selector");
+    const selector = environment.getInput("Selector");
     if (!selector) {
-      enviornment.log.error("Selector not defined");
+      environment.log.error("Selector not defined");
       return false;
     }
 
-    const html = enviornment.getInput("Html");
+    const html = environment.getInput("Html");
     if (!html) {
-      enviornment.log.error("HTML not defined");
+      environment.log.error("HTML not defined");
       return false;
     }
 
@@ -22,21 +22,21 @@ export async function ExtractTextFromElement(
     const element = $(selector);
 
     if (!element) {
-      enviornment.log.error("Element not found on selector");
+      environment.log.error("Element not found on selector");
       return false;
     }
 
     const extractedText = $.text(element);
     if (!extractedText) {
-      enviornment.log.error("Element has no text");
+      environment.log.error("Element has no text");
       return false;
     }
 
-    enviornment.setOutput("Extracted Text", extractedText);
+    environment.setOutput("Extracted Text", extractedText);
 
     return true;
   } catch (error: any) {
-    enviornment.log.error(error.message);
+    environment.log.error(error.message);
     return false;
   }
 }

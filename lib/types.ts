@@ -100,7 +100,7 @@ export type AppNodeMissingInputs = {
   inputs: string[];
 };
 
-export type Enviornment = {
+export type Environment = {
   browser?: Browser;
   page?: Page;
   phases: {
@@ -124,7 +124,7 @@ export type LogCollector = {
   [key in LogLevel]: LogFunction;
 };
 
-export type ExecutionEnviornment<T extends WorkflowTask> = {
+export type ExecutionEnvironment<T extends WorkflowTask> = {
   getInput(name: T["inputs"][number]["name"]): string;
   setOutput(name: T["outputs"][number]["name"], value: string): void;
   getBrowser(): Browser | undefined;
