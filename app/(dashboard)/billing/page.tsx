@@ -131,7 +131,7 @@ function formatDate(date: Date) {
   }).format(date);
 }
 function formatAmount(amount: number, currency: string) {
-  return new Intl.NumberFormat("en-US", { style: "currency", currency }).format(
+  return new Intl.NumberFormat("en-MY", { style: "currency", currency: "MYR" }).format(
     amount / 100
   );
 }

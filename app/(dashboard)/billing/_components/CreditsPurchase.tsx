@@ -43,7 +43,7 @@ function CreditsPurchase() {
       </CardHeader>
       <CardContent>
         <RadioGroup
-          onValueChange={(value) => setSelectedPack(value as PackId)}
+          onValueChange={(value: PackId) => setSelectedPack(value)}
           value={selectedPack}
         >
           {CreditsPack.map((pack) => (
@@ -58,10 +58,10 @@ function CreditsPurchase() {
                 className="flex justify-between cursor-pointer w-full"
               >
                 <span className="font-medium">
-                  {pack.name}-{pack.label}
+                  {pack.name} - {pack.label}
                 </span>
                 <span className="font-bold text-primary">
-                  ${(pack.price / 100).toFixed(2)}
+                  MYR{(pack.price / 100).toFixed(2)}
                 </span>
               </Label>
             </div>
