@@ -36,7 +36,7 @@ export default function HomeLandingPage() {
           </Button>
         </div>
         <p className="text-sm text-primary">
-          New users get 200 credits for free upon first login
+          New users get 50 credits for free upon first login
         </p>
       </SectionWrapper>
       <SectionWrapper
@@ -80,7 +80,7 @@ export default function HomeLandingPage() {
           <ChevronRightIcon className="ml-2 h-4 w-4" />
         </Link>
         <p className="text-xs text-gray-500 dark:text-gray-400">
-          No credit card required. Start with 200 free credits.
+          No credit card required. Start with 50 free credits.
         </p>
       </SectionWrapper>
     </div>

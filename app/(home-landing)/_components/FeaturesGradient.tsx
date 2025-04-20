@@ -1,6 +1,6 @@
+"use client";
 import { howItWorks } from "@/lib/data";
-import React from "react";
-import { useId } from "react";
+import React, { useState, useEffect, useId } from "react";
 
 export function FeaturesGradient() {
   return (
@@ -9,7 +9,7 @@ export function FeaturesGradient() {
         {howItWorks.map((feature) => (
           <div
             key={feature.title}
-            className="relative bg-gradient-to-b dark:from-neutral-900 from-neutral-100 dark:to-neutral-950 to-white p-6 rounded-3xl overflow-hidden"
+            className="relative bg-gradient-to-b dark:from-neutral-900 from-neutral-100 dark:to-neutral-950 to-white p-6 rounded-3xl overflow-hidden transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl hover:shadow-primary/30"
           >
             <Grid size={20} />
             <p className="text-base font-bold text-neutral-800 dark:text-white relative z-20">
@@ -32,13 +32,24 @@ export const Grid = ({
   pattern?: number[][];
   size?: number;
 }) => {
-  const p = pattern ?? [
-    [Math.floor(Math.random() * 4) + 7, Math.floor(Math.random() * 6) + 1],
-    [Math.floor(Math.random() * 4) + 7, Math.floor(Math.random() * 6) + 1],
-    [Math.floor(Math.random() * 4) + 7, Math.floor(Math.random() * 6) + 1],
-    [Math.floor(Math.random() * 4) + 7, Math.floor(Math.random() * 6) + 1],
-    [Math.floor(Math.random() * 4) + 7, Math.floor(Math.random() * 6) + 1],
-  ];
+  const [currentPattern, setCurrentPattern] = useState<number[][] | null>(pattern ?? null);
+
+  useEffect(() => {
+    if (!pattern) {
+      setCurrentPattern([
+        [Math.floor(Math.random() * 4) + 7, Math.floor(Math.random() * 6) + 1],
+        [Math.floor(Math.random() * 4) + 7, Math.floor(Math.random() * 6) + 1],
+        [Math.floor(Math.random() * 4) + 7, Math.floor(Math.random() * 6) + 1],
+        [Math.floor(Math.random() * 4) + 7, Math.floor(Math.random() * 6) + 1],
+        [Math.floor(Math.random() * 4) + 7, Math.floor(Math.random() * 6) + 1],
+      ]);
+    }
+  }, []);
+
+  if (!currentPattern) {
+    return null;
+  }
+
   return (
     <div className="pointer-events-none absolute left-1/2 top-0  -ml-20 -mt-2 h-full w-full [mask-image:linear-gradient(white,transparent)]">
       <div className="absolute inset-0 bg-gradient-to-r  [mask-image:radial-gradient(farthest-side_at_top,white,transparent)] dark:from-primary/30 from-primary/30 to-prifrom-primary/30 dark:to-prifrom-primary/30 opacity-100">
@@ -47,7 +58,7 @@ export const Grid = ({
           height={size ?? 20}
           x="-12"
           y="4"
-          squares={p}
+          squares={currentPattern}
           className="absolute inset-0 h-full w-full  mix-blend-overlay dark:fill-primary/10 dark:stroke-primary/10 stroke-primary/10 fill-primary"
         />
       </div>
@@ -80,10 +91,10 @@ export function GridPattern({ width, height, x, y, squares, ...props }: any) {
       />
       {squares && (
         <svg x={x} y={y} className="overflow-visible">
-          {squares.map(([x, y]: any) => (
+          {squares.map(([x, y]: any, index: number) => (
             <rect
               strokeWidth="0"
-              key={`${x}-${y}`}
+              key={`${x}-${y}-${index}`}
               width={width + 1}
               height={height + 1}
               x={x * width}

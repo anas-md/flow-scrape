@@ -114,24 +114,24 @@ export const headerRoutes = [
 export const pricingPlans = [
   {
     title: "Small Pack",
-    description: "Get 1,000 credits",
-    credits: 1000,
-    price: 9.99,
+    description: "Get 500 credits",
+    credits: 500,
+    price: 1999,
     link: "/billing",
   },
   {
     title: "Medium Pack",
-    description: "Get 5,000 credits",
-    credits: 5000,
-    price: 39.99,
+    description: "Get 2,000 credits",
+    credits: 2000,
+    price: 4999,
     highlighted: true,
     link: "/billing",
   },
   {
     title: "Large Pack",
-    description: "Get 10,000 credits",
-    credits: 10000,
-    price: 69.99,
+    description: "Get 5,000 credits",
+    credits: 5000,
+    price: 9999,
     link: "/billing",
   },
 ];

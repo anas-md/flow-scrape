@@ -43,7 +43,7 @@ export async function runWorkflow(form: {
   let executionPlan: WorkflowExecutionPlan;
   let workflowDefinition = flowDefinition;
 
-  // Is the execution plan is published then the execution plan will set from workflow definition
+  // If the execution plan is published then the execution plan will set from workflow definition
   if (workflow.status === WorkflowStatus.PUBLISHED) {
     if (!workflow.executionPlan) {
       throw new Error("No execution planned found in published workflow");
@@ -99,7 +99,7 @@ export async function runWorkflow(form: {
     throw new Error("Workflow execution not created");
   }
 
-  // This will be a long running function, so just calling it and making it run in background
+  // This will be a long running function, so just call it and make it run in the background
   executeWorkflow(execution.id);
 
   redirect(`/workflow/runs/${workflowId}/${execution.id}`);

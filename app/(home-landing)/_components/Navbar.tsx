@@ -1,10 +1,11 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { headerRoutes, routes } from "@/lib/data";
-import { MenuIcon, XIcon, ZapIcon } from "lucide-react";
+import { headerRoutes } from "@/lib/data";
+import { MenuIcon, XIcon } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import Logo from "@/components/Logo";
 
 function Navbar() {
   const scrollIntoView = (ele: string) => {
@@ -66,10 +67,7 @@ function Navbar() {
 
   return (
     <header className="px-4 lg:px-6 h-14 flex items-center max-w-screen-xl mx-auto w-full text-primary py-10 sticky top-0 backdrop-blur-sm z-50">
-      <Link className="flex items-center justify-center" href="#">
-        <ZapIcon className="h-8 w-8" />
-        <span className="ml-2 text-white">Flux Scrape</span>
-      </Link>
+      <Logo iconSize={24} fontSize="text-lg"/>
       <nav className="ml-auto flex gap-4 sm:gap-6 items-center">
         {headerRoutes.map((route) =>
           route?.button ? (

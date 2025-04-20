@@ -30,7 +30,7 @@ export const HoverEffect = ({
       {items.map((item, idx) => (
         <Link
           href={item?.link}
-          key={item?.link}
+          key={idx}
           className="relative group  block p-2 h-full w-full"
           onMouseEnter={() => setHoveredIndex(idx)}
           onMouseLeave={() => setHoveredIndex(null)}
@@ -61,7 +61,7 @@ export const HoverEffect = ({
             </CardTitle>
             <CardDescription className="flex flex-col gap-2">
               <span className="text-3xl font-semibold group-hover:text-primary text-white">
-                ${item.price}
+                MYR{(item.price / 100).toFixed(2)}
               </span>
               <span className="">{item.description}</span>
               <div className="text-white bg-primary px-10 py-2 rounded-md text-center">
@@ -116,13 +116,13 @@ export const CardDescription = ({
   children: React.ReactNode;
 }) => {
   return (
-    <p
+    <div
       className={cn(
         "mt-8 text-zinc-400 tracking-wide leading-relaxed text-sm",
         className
       )}
     >
       {children}
-    </p>
+    </div>
   );
 };
